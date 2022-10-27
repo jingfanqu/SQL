@@ -1,0 +1,6 @@
+SELECT Department, Employee, salary
+FROM(
+SELECT Department.name AS Department, Employee.name AS Employee, salary, DENSE_RANK() OVER(PARTITION BY Department.id ORDER BY salary DESC) AS rank_result
+FROM Employee INNER JOIN Department
+ON Employee.departmentId=Department.id) AS e
+WHERE rank_result=1
