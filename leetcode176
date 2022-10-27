@@ -1,0 +1,18 @@
+SELECT IF(MAX(e.dense_rank_result)<2,NULL,salary) AS SecondHighestSalary
+FROM (SELECT *, DENSE_RANK() OVER (ORDER BY salary DESC) AS dense_rank_result FROM Employee) AS e
+WHERE dense_rank_result = 2;
+
+
+SELECT MAX(salary) AS SecondHighestSalary
+FROM Employee
+WHERE salary < (SELECT MAX(salary) FROM Employee);
+
+Common Table Expression 
+WITH ranked_employees AS (
+    SELECT salary,
+    DENSE_RANK() OVER( ORDER BY salary DESC ) AS rnk
+    FROM Employee
+)
+SELECT IF(MAX(rnk)<2, NULL, salary) AS SecondHighestSalary
+FROM ranked_employees
+WHERE rnk=2;
