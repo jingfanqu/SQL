@@ -1,0 +1,11 @@
+with cte as(
+select event_type, sum(occurences)/count(event_type) as average
+from Events
+GROUP by event_type)
+
+select business_id
+from Events 
+inner join cte on Events.event_type=cte.event_type
+where occurences> average
+group by business_id
+having count(distinct Events.event_type)>1
