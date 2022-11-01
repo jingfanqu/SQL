@@ -1,0 +1,20 @@
+SELECT request_at AS 'Day', ROUND(COUNT(CASE WHEN status!='completed'THEN status END)/COUNT(*),2) AS 'cancellation rate'
+FROM Trips
+-- unbanned client and driver
+WHERE client_id NOT IN (SELECT users_id FROM Users WHERE banned='Yes')
+AND driver_id NOT IN (SELECT users_id FROM Users WHERE banned='Yes')
+AND request_at BETWEEN '2013-10-01' AND '2013-10-03' -- date filter
+GROUP BY request_at;
+
+CTE:
+WITH tmp AS(
+    SELECT Trips.request_at, (CASE WHEN Trips.status!='completed' THEN 1 ELSE 0 END) AS 'uncompleted_mark'
+    FROM Trips
+    INNER JOIN Users AS u1 ON Trips.client_id=u1.users_id
+    INNER JOIN Users AS u2 ON Trips.driver_id=u2.users_id
+    WHERE u1.banned='No' AND u2.banned='No' AND Trips.request_at BETWEEN '2013-10-01' AND '2013-10-03'
+)
+
+SELECT request_at AS 'Day', ROUND(SUM(uncompleted_mark)/COUNT(uncompleted_mark),2) AS 'Cancellation Rate'
+FROM tmp
+GROUP BY request_at;
