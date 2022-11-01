@@ -1,0 +1,6 @@
+SELECT DISTINCT d.dept_name, COUNT(s.student_id) OVER( PARTITION BY d.dept_id) AS student_number
+FROM Student s
+RIGHT JOIN Department d
+ON s.dept_id=d.dept_id
+ORDER BY student_number DESC, dept_name;
+
