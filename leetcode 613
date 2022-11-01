@@ -1,0 +1,3 @@
+select round(min(sqrt((power((p2.x - p1.x),2) + power((p2.y - p1.y),2)))),2) shortest
+from Point2D p1, Point2D p2 
+where (p1.x, p1.y) != (p2.x, p2.y)
