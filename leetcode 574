@@ -1,0 +1,14 @@
+SELECT name
+FROM Vote INNER JOIN Candidate ON Vote.CandidateId=Candidate.id
+GROUP BY CandidateId
+ORDER BY COUNT(CandidateId) DESC
+LIMIT 1
+
+Window function:
+
+SELECT name FROM(
+select name, dense_rank() over (order by count(candidateId) desc) as rk1 from candidate c
+join vote v
+on c.id = v.candidateId
+group by name) AS a
+limit 1
