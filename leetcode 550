@@ -1,0 +1,13 @@
+1.
+select round((sum(if(datediff(event_date,first_login)=1,1,0))/count(distinct player_id)),2) fraction
+from (select *, min(event_date) over(partition by player_id) first_login
+      from activity) t
+
+2. 测试不通过
+
+WITH tmp AS(
+SELECT DISTINCT COUNT(a1.player_id) AS 't'
+FROM Activity AS a1, Activity AS a2
+WHERE DATEDIFF(a2.event_date,a1.event_date)=1 AND a1.player_id=a2.player_id)
+SELECT ROUND(t/COUNT(DISTINCT player_id),2) AS 'fraction'
+FROM tmp,Activity
