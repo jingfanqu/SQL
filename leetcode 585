@@ -1,0 +1,20 @@
+WITH u AS(
+SELECT pid as p, COUNT(*) OVER(PARTITION BY lat,lon) as result
+FROM Insurance),
+
+t AS(
+SELECT tiv_2015 as tiv5, COUNT(tiv_2015) OVER(PARTITION BY tiv_2015) AS num
+FROM Insurance),
+
+a AS(
+SELECT DISTINCT *
+FROM Insurance AS i
+INNER JOIN u
+ON u.p=i.pid
+INNER JOIN t
+ON i.tiv_2015=t.tiv5
+WHERE result=1 AND num>1)
+
+
+SELECT ROUND(SUM(tiv_2016),2) AS tiv_2016
+from a
