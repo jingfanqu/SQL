@@ -1,0 +1,9 @@
+-- 中位数位置：奇数n+1/2    偶数有两个 n/2  n/2+1
+
+SELECT t.id, t.company, t.salary
+FROM(
+    SELECT *, ROW_NUMBER() OVER(PARTITION BY company ORDER BY salary) AS 'salary_resort', 
+              COUNT(id) OVER(PARTITION BY company) AS 'counting'
+    FROM Employee
+    ) as t
+WHERE salary_resort IN (t.counting/2,t.counting/2+1,(t.counting+1)/2)
