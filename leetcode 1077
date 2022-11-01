@@ -1,0 +1,13 @@
+with cte as(
+select 
+p.project_id, 
+P.employee_id, 
+e.name,
+e.experience_years,
+dense_rank() over(partition by project_id order by experience_years desc) as rank_
+from project P inner join employee E on P.employee_id = E.employee_id
+)
+
+select project_id, employee_id
+from cte
+where rank_=1
