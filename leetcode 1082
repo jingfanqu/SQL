@@ -1,0 +1,6 @@
+select seller_id
+from (
+SELECT seller_id, RANK() OVER (Order By sum(price) DESC) as seller_rank
+from sales
+group by seller_id) as tmp
+where seller_rank=1
